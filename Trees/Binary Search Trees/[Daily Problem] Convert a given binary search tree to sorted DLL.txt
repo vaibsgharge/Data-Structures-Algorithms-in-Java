@@ -1,0 +1,59 @@
+Question: Convert Binary Tree to Doubly Linked List (BST to DLL)
+
+Example: 
+
+Consider the following BST:
+
+	   10
+      /  \
+     6    13
+    /    / \
+   4   12   15
+      /
+     11
+			
+Solution:
+
+If we want to convert and BST to Sorted DLL, we will have to perform the In-Order Traversal to generate the values in sorted order.
+
+1. Maintain 2 pointers at the instance level called head and prev.
+2. Check if passed node is null, if yes return;
+3. Recursively called treeToDoubleLL on root.left;
+4. Then check, if prev == null which means this is the root node and hence set head = root and prev = root
+5. If prev != null, which means this is child node and hence set the root.left = prev and prev.right = root and then set current node as prev.
+5. Recursively called treeToDoubleLL on root.left;
+
+
+Reference : https://thecodingsimplified.com/convert-binary-tree-to-doubly-linked-list/
+
+class Node {
+
+  Node left;
+  Node right;
+  int data;
+  
+}
+  Node headLinkedList;
+  Node prev;
+
+  public void bstToDoublyLinkedList(Node node) {
+  
+    if (node == null) {
+      return;
+    }
+
+    this.bstToDoublyLinkedList(node.left);
+
+    if (prev == null) {
+      headLinkedList = node;
+      prev = node;
+	  
+    } else {
+      node.left = prev;
+      prev.right = node;
+      prev = node;
+    }
+
+    this.bstToDoublyLinkedList(node.right);
+ }
+  

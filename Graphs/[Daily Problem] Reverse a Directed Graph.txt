@@ -1,0 +1,138 @@
+Question:
+
+This problem was recently asked by Facebook:
+
+Given a directed graph, reverse the directed graph so all directed edges are reversed. 
+
+Example:
+	Input:
+	A -> B, B -> C, A ->C
+
+	Output:
+	B->A, C -> B, C -> A
+
+Solution:
+
+Iterate through the Adjacency List of the existing map and add current vertex into the adjacencyList.
+ 
+Reference : https://algorithms.tutorialhorizon.com/reverse-the-directed-graph/
+
+public class Node {
+    int n;
+    String name;
+    boolean visited;
+
+    Node(int n, String name) {
+        this.n = n;
+        this.name = name;
+        visited = false;
+    }
+
+    void visit() {
+        visited = true;
+    }
+
+    void unvisit() {
+        visited = false;
+    }
+}
+
+public class Graph {
+
+    // Each node maps to a list of all his neighbors
+    private HashMap<Node, LinkedList<Node>> adjacencyMap;
+    private boolean directed;
+
+    public Graph(boolean directed) {
+        this.directed = directed;
+        adjacencyMap = new HashMap<>();
+    }
+
+	public void addEdge(Node source, Node destination) {
+
+		// We make sure that every used node shows up in our .keySet()
+		if (!adjacencyMap.keySet().contains(source)){
+			adjacencyMap.put(source, null);
+		}
+			
+
+		if (!adjacencyMap.keySet().contains(destination)){
+			adjacencyMap.put(destination, null);
+		}
+	
+		addEdgeHelper(source, destination);
+
+		// If a graph is undirected, we want to add an edge from destination to source as well
+		if (!directed) {
+			addEdgeHelper(destination, source);
+		}
+	}
+	
+	private void addEdgeHelper(Node a, Node b) {
+	
+		LinkedList<Node> tmp = adjacencyMap.get(a);
+
+		if (tmp != null) {
+			tmp.remove(b);
+		} else {
+			tmp = new LinkedList<>();
+			tmp.add(b);
+		}
+		
+		adjacencyMap.put(a,tmp);
+	}
+	
+	public void printEdges() {
+		
+		for (Node node : adjacencyMap.keySet()) {
+			
+			System.out.print("The " + node.name + " has an edge towards: ");
+			
+			for (Node neighbor : adjacencyMap.get(node)) {
+				System.out.print(neighbor.name + " ");
+			}
+			
+			System.out.println();
+		}
+	}
+
+	public boolean hasEdge(Node source, Node destination) {
+		return adjacencyMap.containsKey(source) && adjacencyMap.get(source).contains(destination);
+	}
+	
+	void reverseTheGraph() {
+
+		Graph reversedGraph = new Graph(false);
+
+		for (Node to : this.adjacencyMap.keySet()) {
+			
+			for (Node from : this.adjacencyMap.get(to)) {
+				reversedGraph.addEdge(from, to);
+			}
+			
+			System.out.println();
+		}
+		
+		return reversedGraph;
+	}
+}
+
+
+public class GraphShow {
+    public static void main(String[] args) {
+
+        Graph graph = new Graph(false);
+        Node a = new Node(0, "A");
+        Node b = new Node(1, "B");
+        Node c = new Node(2, "C");
+        Node d = new Node(3, "D");
+        Node e = new Node(4, "E");
+
+        graph.addEdge(a,d);
+        graph.addEdge(a,b);
+        graph.addEdge(c,e);
+
+        graph.reverseTheGraph();
+    }
+}
+
